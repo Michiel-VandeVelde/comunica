@@ -117,9 +117,10 @@ export class OverloadTree {
       if (index === args.length && node.implementation) {
         this.addToCache(functionArgumentsCache, args, node.implementation);
         return node.implementation;
+      } else if (index < args.length) {
+        searchStack.push(...node.getSubTreeWithArg(args[index], superTypeProvider).map(item =>
+          ({ node: item, index: index + 1 })));
       }
-      searchStack.push(...node.getSubTreeWithArg(args[index], superTypeProvider).map(item =>
-        ({ node: item, index: index + 1 })));
     }
     // Calling a function with one argument but finding no implementation should return no implementation.
     // Not even the one with no arguments.
